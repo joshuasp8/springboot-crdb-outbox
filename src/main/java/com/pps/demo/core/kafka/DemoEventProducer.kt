@@ -7,6 +7,6 @@ import org.springframework.stereotype.Component
 @Component
 class DemoEventProducer(private val demoEventKafkaTemplate: KafkaTemplate<String, DemoEvent>) {
   fun send(event: DemoEvent) {
-    demoEventKafkaTemplate.send("demo-topic", event)
+    demoEventKafkaTemplate.send("demo-order-topic", event)
   }
 }

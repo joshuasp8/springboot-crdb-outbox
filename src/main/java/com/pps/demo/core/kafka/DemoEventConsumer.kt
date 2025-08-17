@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class DemoEventConsumer {
-  @KafkaListener(topics = ["demo-topic"], containerFactory = "demoEventKafkaListenerContainerFactory")
+  @KafkaListener(topics = ["demo-order-topic"], containerFactory = "demoEventKafkaListenerContainerFactory")
   fun consume(event: DemoEvent, ack: Acknowledgment) {
     println("Message received: ${event.message}")
     ack.acknowledge()

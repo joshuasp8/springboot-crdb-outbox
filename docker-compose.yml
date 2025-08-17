@@ -19,14 +19,15 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
-  postgres:
-    image: postgres:17.4
+  cockroachdb:
+    image: cockroachdb/cockroach:latest-v24.3
+    command: start-single-node --insecure
     restart: always
     # set a shared memory limit
     shm_size: 128mb
     ports:
-      - "5432:5432"
+      - "26257:26257" # SQL port
+      - "26258:8080" # Web UI
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      COCKROACH_USER: cockroach
+      COCKROACH_PASSWORD: password
