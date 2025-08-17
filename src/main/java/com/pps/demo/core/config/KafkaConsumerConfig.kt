@@ -1,6 +1,7 @@
 package com.pps.demo.core.config
 
 import com.pps.demo.core.kafka.models.OrderEvent
+import com.pps.demo.core.outbox.models.OrderEventEnvelope
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.springframework.beans.factory.annotation.Value
@@ -41,6 +42,34 @@ class KafkaConsumerConfig(
   ): ConcurrentKafkaListenerContainerFactory<String, OrderEvent> {
     val factory = ConcurrentKafkaListenerContainerFactory<String, OrderEvent>()
     factory.consumerFactory = orderEventConsumerFactory
+    factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL_IMMEDIATE
+    factory.setConcurrency(3) // Max number of threads consuming messages
+    return factory
+  }
+
+  @Bean
+  fun orderOutboxEventConsumerFactory(): ConsumerFactory<String, OrderEventEnvelope> {
+    val configProps = mapOf(
+      ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG to bootstrapServers,
+      ConsumerConfig.CLIENT_ID_CONFIG to "order-outbox-consumer",
+      ConsumerConfig.GROUP_ID_CONFIG to "order-outbox-group",
+      ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
+      ConsumerConfig.AUTO_OFFSET_RESET_CONFIG to "earliest",
+      ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG to false,
+      JsonDeserializer.TRUSTED_PACKAGES to "*",
+      JsonDeserializer.USE_TYPE_INFO_HEADERS to false,
+    )
+    return DefaultKafkaConsumerFactory<String, OrderEventEnvelope>(configProps).also {
+      it.valueDeserializer = JsonDeserializer(OrderEventEnvelope::class.java)
+    }
+  }
+
+  @Bean
+  fun orderOutboxEventKafkaListenerContainerFactory(
+    orderOutboxEventConsumerFactory: ConsumerFactory<String, OrderEventEnvelope>,
+  ): ConcurrentKafkaListenerContainerFactory<String, OrderEventEnvelope> {
+    val factory = ConcurrentKafkaListenerContainerFactory<String, OrderEventEnvelope>()
+    factory.consumerFactory = orderOutboxEventConsumerFactory
     factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL_IMMEDIATE
     factory.setConcurrency(3) // Max number of threads consuming messages
     return factory

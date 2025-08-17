@@ -33,12 +33,19 @@ docker exec -it $(docker ps -qf "ancestor=cockroachdb/cockroach:latest-v24.3") c
 
 echo "Database 'demo' ready."
 
-# Create Kafka topic
+# Create Kafka topics
 docker exec -it $(docker ps -qf "ancestor=confluentinc/cp-kafka:7.6.5") \
   kafka-topics --create \
   --topic demo-order-topic \
-  --bootstrap-server localhost:9092 \
+  --bootstrap-server kafka:9092 \
   --partitions 3 \
   --replication-factor 1
 
-echo "Kafka topic 'demo-order-topic' created."
+docker exec -it $(docker ps -qf "ancestor=confluentinc/cp-kafka:7.6.5") \
+  kafka-topics --create \
+  --topic order-outbox-events \
+  --bootstrap-server kafka:9092 \
+  --partitions 3 \
+  --replication-factor 1
+
+echo "Bootstrap complete."
