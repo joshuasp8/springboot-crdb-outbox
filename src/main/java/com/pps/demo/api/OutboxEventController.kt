@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 class OutboxEventController(
   private val forwarder: OrderOutboxForwarder
 ) {
+  // TODO: fix - this needs its own DTO
   @PostMapping("/forward")
   fun forwardOutboxEvents(@RequestBody orderEventEnvelope: OrderEventEnvelope) {
     forwarder.forward(orderEventEnvelope)
