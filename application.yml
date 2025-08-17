@@ -7,8 +7,8 @@ logging:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/demo?currentSchema=demo
-    username: postgres
+    url: jdbc:postgresql://localhost:26257/demo?sslmode=disable
+    username: root
     password: password
   jpa:
     hibernate:

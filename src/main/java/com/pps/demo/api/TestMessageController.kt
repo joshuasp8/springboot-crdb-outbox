@@ -2,7 +2,7 @@ package com.pps.demo.api
 
 import com.pps.demo.api.models.SendMessageRequest
 import com.pps.demo.core.kafka.DemoEventProducer
-import com.pps.demo.core.kafka.models.DemoEvent
+import com.pps.demo.core.kafka.models.OrderEvent
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -15,7 +15,7 @@ import java.util.*
 class TestMessageController(private val producer: DemoEventProducer) {
   @PostMapping("/send")
   fun sendMessage(@RequestBody request: SendMessageRequest): ResponseEntity<String> {
-    val event = DemoEvent(id = UUID.randomUUID().toString(), message = request.message)
+    val event = OrderEvent(id = UUID.randomUUID().toString(), message = request.message)
     producer.send(event)
     return ResponseEntity.ok("Message sent: $event")
   }

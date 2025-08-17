@@ -23,11 +23,6 @@ services:
     image: cockroachdb/cockroach:latest-v24.3
     command: start-single-node --insecure
     restart: always
-    # set a shared memory limit
-    shm_size: 128mb
     ports:
       - "26257:26257" # SQL port
       - "26258:8080" # Web UI
-    environment:
-      COCKROACH_USER: cockroach
-      COCKROACH_PASSWORD: password

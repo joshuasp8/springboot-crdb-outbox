@@ -1,6 +1,6 @@
 package com.pps.demo.core.config
 
-import com.pps.demo.core.kafka.models.DemoEvent
+import com.pps.demo.core.kafka.models.OrderEvent
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.springframework.beans.factory.annotation.Value
@@ -19,7 +19,7 @@ class KafkaConsumerConfig(
 ) {
 
   @Bean
-  fun demoEventConsumerFactory(): ConsumerFactory<String, DemoEvent> {
+  fun demoEventConsumerFactory(): ConsumerFactory<String, OrderEvent> {
     val configProps = mapOf(
       ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG to bootstrapServers,
       ConsumerConfig.CLIENT_ID_CONFIG to "demo-consumer",
@@ -30,17 +30,17 @@ class KafkaConsumerConfig(
       JsonDeserializer.TRUSTED_PACKAGES to "*",
       JsonDeserializer.USE_TYPE_INFO_HEADERS to false,
     )
-    return DefaultKafkaConsumerFactory<String, DemoEvent>(configProps).also {
-      it.valueDeserializer = JsonDeserializer(DemoEvent::class.java) // use specific deserializer for event type
+    return DefaultKafkaConsumerFactory<String, OrderEvent>(configProps).also {
+      it.valueDeserializer = JsonDeserializer(OrderEvent::class.java)
     }
   }
 
   @Bean
   fun demoEventKafkaListenerContainerFactory(
-    demoEventConsumerFactory: ConsumerFactory<String, DemoEvent>,
-  ): ConcurrentKafkaListenerContainerFactory<String, DemoEvent> {
-    val factory = ConcurrentKafkaListenerContainerFactory<String, DemoEvent>()
-    factory.consumerFactory = demoEventConsumerFactory
+    orderEventConsumerFactory: ConsumerFactory<String, OrderEvent>,
+  ): ConcurrentKafkaListenerContainerFactory<String, OrderEvent> {
+    val factory = ConcurrentKafkaListenerContainerFactory<String, OrderEvent>()
+    factory.consumerFactory = orderEventConsumerFactory
     factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL_IMMEDIATE
     factory.setConcurrency(3) // Max number of threads consuming messages
     return factory

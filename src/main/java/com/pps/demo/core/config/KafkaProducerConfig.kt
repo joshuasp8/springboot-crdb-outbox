@@ -1,6 +1,6 @@
 package com.pps.demo.core.config
 
-import com.pps.demo.core.kafka.models.DemoEvent
+import com.pps.demo.core.kafka.models.OrderEvent
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.beans.factory.annotation.Value
@@ -17,7 +17,7 @@ class KafkaProducerConfig(
   private val bootstrapServers: String,
 ) {
   @Bean
-  fun demoEventProducerFactory(): ProducerFactory<String, DemoEvent> {
+  fun demoEventProducerFactory(): ProducerFactory<String, OrderEvent> {
     val configProps = mapOf(
       ProducerConfig.BOOTSTRAP_SERVERS_CONFIG to bootstrapServers,
       ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG to StringSerializer::class.java,
@@ -31,8 +31,8 @@ class KafkaProducerConfig(
 
   @Bean
   fun demoEventKafkaTemplate(
-    demoEventProducerFactory: ProducerFactory<String, DemoEvent>,
-  ): KafkaTemplate<String, DemoEvent> {
-    return KafkaTemplate(demoEventProducerFactory)
+    orderEventProducerFactory: ProducerFactory<String, OrderEvent>,
+  ): KafkaTemplate<String, OrderEvent> {
+    return KafkaTemplate(orderEventProducerFactory)
   }
 }
