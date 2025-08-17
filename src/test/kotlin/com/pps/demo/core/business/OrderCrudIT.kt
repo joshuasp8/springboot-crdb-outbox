@@ -2,6 +2,7 @@ package com.pps.demo.core.business
 
 import com.pps.demo.core.business.models.CreateOrderParams
 import com.pps.demo.core.business.models.UpdateOrderParams
+import com.pps.demo.core.config.SerializationConfig
 import com.pps.demo.core.exceptions.OrderNotFoundException
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -13,7 +14,7 @@ import kotlin.test.assertEquals
 
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // use real database
 @DataJpaTest
-@Import(OrderCreator::class, OrderRetriever::class, OrderUpdater::class, OrderDeleter::class)
+@Import(OrderCreator::class, OrderRetriever::class, OrderUpdater::class, OrderDeleter::class, SerializationConfig::class)
 class OrderCrudIT @Autowired constructor(
   private val orderCreator: OrderCreator,
   private val orderRetriever: OrderRetriever,
@@ -31,8 +32,8 @@ class OrderCrudIT @Autowired constructor(
     // update demo
     orderUpdater.updateDemo(UpdateOrderParams(retrievedDemo.id, "Goodbye World"))
     val updatedDemo = orderRetriever.getOrder(retrievedDemo.id)
-    assertEquals(updatedDemo, createdDemo)
-    assertEquals(updatedDemo.message, "Goodbye World")
+    assertEquals(createdDemo.id, updatedDemo.id)
+    assertEquals("Goodbye World", updatedDemo.message)
 
     // delete demo
     orderDeleter.deleteDemo(updatedDemo.id)

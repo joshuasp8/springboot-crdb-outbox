@@ -15,7 +15,11 @@ import java.util.*
 class TestMessageController(private val producer: DemoEventProducer) {
   @PostMapping("/send")
   fun sendMessage(@RequestBody request: SendMessageRequest): ResponseEntity<String> {
-    val event = OrderEvent(id = UUID.randomUUID().toString(), message = request.message)
+    val event = OrderEvent(
+      id = UUID.randomUUID().toString(),
+      orderId = UUID.randomUUID().toString(),
+      message = request.message
+    )
     producer.send(event)
     return ResponseEntity.ok("Message sent: $event")
   }
