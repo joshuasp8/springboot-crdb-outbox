@@ -1,0 +1,11 @@
+<template unencoded="false">
+  <roots>
+    <root index="0" path="" />
+    <root index="1" path="build/generated/aotSources" />
+    <root index="2" path="build/generated/aotResources" />
+    <root index="3" path="build/generated/aotTestSources" />
+    <root index="4" path="build/generated/aotTestResources" />
+    <root index="5" path="src/main" />
+    <root index="6" path="src/test" />
+  </roots>
+</template>

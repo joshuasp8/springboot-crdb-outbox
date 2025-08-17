@@ -1,0 +1,22 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    org.springframework.web: INFO
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/demo?currentSchema=demo
+    username: postgres
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  kafka:
+    bootstrap-servers: localhost:9092
+
+flyway:
+  enabled: true
+  schemas: demo

@@ -1,0 +1,14 @@
+pluginManagement {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+// required for gradle 8.0.2 or higher for toolchain support
+// See https://kotlinlang.org/docs/gradle-configure-project.html#gradle-java-toolchains-support
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.5.0'
+}
+
+rootProject.name = 'springboot-crdb-outbox'
